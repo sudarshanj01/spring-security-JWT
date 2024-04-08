@@ -22,14 +22,12 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request){
+    public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
-        User user = (User) authentication.getPrincipal();
-        String jwt = jwtService.generateToken(user);
-
+        String jwt = jwtService.generateToken((org.springframework.security.core.userdetails.User) authentication.getPrincipal());
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 

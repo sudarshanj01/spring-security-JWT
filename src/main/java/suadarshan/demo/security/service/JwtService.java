@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = UUID.randomUUID().toString();
+    private static final String SECRET_KEY = "unmechanised817ye7y3cyborg7q28cobweb87" +
+            "site73edwoiegxdcynufsgyuoxfcq7o4wgo9r0NYX9go87e87fcgwrcretkeyfortestingpurposep";
 
 
     //1 st method , all other belows methods are helper methods
@@ -59,16 +60,7 @@ public class JwtService {
     }
 
     //3 rd method and helpers
-    public String generateToken(User user) {
-
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.getRole().startsWith("ROLE_") ?
-                        Collections.singleton(new SimpleGrantedAuthority(user.getRole())) :
-                        Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-        );
-
+    public String generateToken(org.springframework.security.core.userdetails.User userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", userDetails.getUsername());
         claims.put("roles", userDetails.getAuthorities().stream()
@@ -80,8 +72,8 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Expire in 24 hours
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .signWith(getSignInKey(),SignatureAlgorithm.HS256)
                 .compact();
-        }
+    }
 
 }
